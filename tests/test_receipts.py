@@ -28,9 +28,10 @@ def test_incomplete_and_plain_values_refused():
 def test_sandbox_is_explicit_and_restricted(tmp_path):
     msi = tmp_path / 'demo & test.msi'
     msi.write_bytes(b'SYNTHETIC_NOT_A_REAL_INSTALLER')
-    out = tmp_path / 'package'
+    out = tmp_path / 'package & test'
     prepare(msi, out)
     root = ET.parse(out / 'run.wsb').getroot()
+    assert 'package &amp; test' in (out / 'run.wsb').read_text()
     assert root.findtext('Networking') == 'Disable'
     assert root.findtext('ClipboardRedirection') == 'Disable'
     maps = root.findall('MappedFolders/MappedFolder')

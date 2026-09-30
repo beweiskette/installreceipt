@@ -1,16 +1,12 @@
-# Version 0.1 design
+# Design
 
-Prepare a restricted Windows Sandbox run for an MSI installer, then compare installation changes and uninstall residue using hashed snapshots.
+Compare MSI installation changes and uninstall residue from Windows Sandbox snapshots.
 
-The design was reviewed once through a read-only Claude adapter before implementation. That consultation received feature proposals and synthetic examples, not repository contents or credentials. Implementation and local verification were performed separately; the consultation was a design review, not a code audit.
+Use `--cab ./data.cab` for each external cabinet stored beside the MSI and `--transform ./custom.mst` for each transform. These options can be repeated. Files are copied using their original basenames, and transforms are applied in the specified order. Companion names must be unique ignoring case. Cabinets required in nested source folders and installers that fetch missing components from the network are outside this version; sandbox networking stays disabled.
 
-The selected scope favours explicit user contracts and local evidence. Automatic uploads, model-generated pass criteria, background monitoring and publishing are excluded. This version makes no claim that the idea is unique or that it will attract a particular number of GitHub stars.
+Malformed JSON, unsupported snapshots and malformed release receipts produce a reason and exit 2 without a Python traceback. Package tests use dummy bytes and inspect the generated XML, companion files and PowerShell arguments. They do not validate an actual CAB/MST installation. The XML escaping test places an ampersand in the mapped host folder and checks both the escaped XML and the parsed path.
 
-## Acceptance evidence
-
-Tests use synthetic snapshots and a non-executable dummy MSI byte sequence. They verify comparison results, incomplete-input rejection, XML escaping, disabled network/clipboard and fresh output-folder requirements. They do not launch Windows Sandbox.
-
-## Deliberate limits
+## Scope
 
 The sandbox maps one input folder read-only and one newly created output folder writable. Networking, clipboard, printers, audio/video input and vGPU are disabled. Never put unrelated host data in the output folder. The installer can modify receipts inside its sandbox, so these are observations for trusted software testing, not tamper-proof forensic evidence.
 

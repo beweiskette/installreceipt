@@ -1,13 +1,11 @@
-# Validation record
+# Validation
 
 Checked on 2026-09-30 with Python 3.11 on Windows.
 
-Local pytest result: `7 passed, 1 skipped in 0.10s`. Skipped cases require Windows symlink creation privileges; Linux CI exercises those cases. Editable installation, CLI help and wheel construction succeeded. Only synthetic fixtures were used.
+Before these repairs: 8 collected tests. After: 14 collected, 13 passed and 1 skipped. The skipped cases require Windows symlink creation privileges. Linux CI runs those cases. New bug regressions were run against the previous implementation and observed failing before their fixes; the XML test strengthens existing escaping coverage.
 
-The checked-in reports under `examples/` come from actual CLI runs against the synthetic fixtures. Browser reports may contain the temporary loopback port used for that run; adjust the reproduction URL to your running fixture server.
+Tests inspect synthetic receipts, malformed inputs, generated XML with an ampersand in the host mapping and external CAB/MST packaging. PowerShell parsing succeeds. Actual MSI/CAB/MST execution in Windows Sandbox remains untested because Sandbox is unavailable on the development host.
 
-Source review and a staged-file pattern scan found no live credential formats, private user paths or accidentally tracked environment files. This is a scoped check, not a guarantee that every possible secret format is detectable.
+The current wheel builds with `python -m pip wheel --no-deps .` using pip's isolated build environment. CLI help succeeds. German README validation with schreibwaechter and locale de-CH reports 0 errors and 0 warnings. Only synthetic test inputs were used.
 
-Actual installation inside Windows Sandbox remains untested. PowerShell scripts were syntax-checked; Python comparisons and generated XML were tested.
-
-See the Actions tab for independent Windows and Linux CI results.
+CI results are available at [GitHub Actions](https://github.com/beweiskette/installreceipt/actions). See SECURITY.md for report contents and runtime boundaries.

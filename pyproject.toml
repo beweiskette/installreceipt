@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "installreceipt"
 version = "0.1.0"
-description = "Local, explicit verification for developers"
+description = "Compare MSI installation changes and uninstall residue from Windows Sandbox snapshots"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
@@ -26,3 +26,6 @@ installreceipt = ["scripts/*.ps1"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = ["integration: requires Docker or a Chromium browser"]
+
+[project.urls]
+Repository = "https://github.com/beweiskette/installreceipt"

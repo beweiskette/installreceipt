@@ -1,8 +1,14 @@
 $ErrorActionPreference = 'Stop'
 $status = [ordered]@{schema=1; status='incomplete'; install_exit=$null; uninstall_exit=$null}
 try {
+    $options = Get-Content -LiteralPath C:\ReceiptInput\install-options.json -Raw | ConvertFrom-Json
+    $arguments = @('/i', 'C:\ReceiptInput\installer.msi', '/qn', '/norestart')
+    if ($options.transforms.Count -gt 0) {
+        $paths = @($options.transforms | ForEach-Object { Join-Path 'C:\ReceiptInput' $_ })
+        $arguments += ('TRANSFORMS="' + ($paths -join ';') + '"')
+    }
     & C:\ReceiptInput\collect.ps1 -OutputPath C:\ReceiptOutput\before.json
-    $install = Start-Process msiexec.exe -ArgumentList @('/i', 'C:\ReceiptInput\installer.msi', '/qn', '/norestart') -Wait -PassThru -WindowStyle Hidden
+    $install = Start-Process msiexec.exe -ArgumentList $arguments -Wait -PassThru -WindowStyle Hidden
     $status.install_exit = $install.ExitCode
     if ($install.ExitCode -notin @(0, 3010)) { throw 'Installation failed' }
     & C:\ReceiptInput\collect.ps1 -OutputPath C:\ReceiptOutput\installed.json

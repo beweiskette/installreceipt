@@ -32,6 +32,12 @@ Compare two resulting `report.json` files with `installreceipt releases receipt-
 
 Reports are local JSON and self-contained HTML. Exit status is 0 for a pass, 1 for findings, and 2 for an input or runtime setup error. Commands do not publish reports or contact a model API.
 
+## Input and runtime details
+
+Use `--cab ./data.cab` for each external cabinet stored beside the MSI and `--transform ./custom.mst` for each transform. These options can be repeated. Files are copied using their original basenames, and transforms are applied in the specified order. Companion names must be unique ignoring case. Cabinets required in nested source folders and installers that fetch missing components from the network are outside this version; sandbox networking stays disabled.
+
+Malformed JSON, unsupported snapshots and malformed release receipts produce a reason and exit 2 without a Python traceback. Package tests use dummy bytes and inspect the generated XML, companion files and PowerShell arguments. They do not validate an actual CAB/MST installation. The XML escaping test places an ampersand in the mapped host folder and checks both the escaped XML and the parsed path.
+
 ## Boundaries
 
 The sandbox maps one input folder read-only and one newly created output folder writable. Networking, clipboard, printers, audio/video input and vGPU are disabled. Never put unrelated host data in the output folder. The installer can modify receipts inside its sandbox, so these are observations for trusted software testing, not tamper-proof forensic evidence.
@@ -50,6 +56,6 @@ python -m pytest -q
 
 Tests use synthetic snapshots and a non-executable dummy MSI byte sequence. They verify comparison results, incomplete-input rejection, XML escaping, disabled network/clipboard and fresh output-folder requirements. They do not launch Windows Sandbox.
 
-GitHub Actions runs tests on Windows and Linux. Integration jobs use synthetic local fixtures. No deployment or package publication workflow is configured. Dependency installation and browser/image downloads are explicit setup steps that contact their respective package providers.
+GitHub Actions runs tests on Windows and Linux. Tests use synthetic local fixtures. No deployment or package publication workflow is configured. Dependency installation is an explicit setup step that contacts package providers.
 
 See [DESIGN.md](DESIGN.md) for the scope decisions and [SECURITY.md](SECURITY.md) for data handling.

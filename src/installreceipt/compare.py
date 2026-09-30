@@ -23,9 +23,13 @@ def compare(before, installed, removed):
 
 def releases(a, b):
     for receipt in (a, b):
-        if receipt.get('schema') != 1 or receipt.get('kind') != 'installation-receipt':
+        if not isinstance(receipt, dict) or receipt.get('schema') != 1 or receipt.get('kind') != 'installation-receipt':
             raise ValueError('Two installation receipts are required')
         validate({'schema': 1, 'complete': True, 'items': receipt.get('installed_fingerprints')})
+        residue = receipt.get('uninstall_residue')
+        if (not isinstance(residue, dict) or set(residue) != {'added', 'removed', 'changed'} or
+                any(not isinstance(v, list) or any(not isinstance(n, str) for n in v) for v in residue.values())):
+            raise ValueError('Receipt uninstall_residue must contain added, removed and changed name lists')
     differences = delta(a['installed_fingerprints'], b['installed_fingerprints'])
     # Include changed residue findings even when installed state is identical.
     return {'schema': 1, 'kind': 'release-comparison',
