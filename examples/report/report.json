@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "kind": "installation-receipt",
+  "status": "attention",
+  "installation": {
+    "added": [
+      "service:DemoService"
+    ],
+    "removed": [],
+    "changed": [
+      "environment:PATH:Machine"
+    ]
+  },
+  "uninstall_residue": {
+    "added": [
+      "service:DemoService"
+    ],
+    "removed": [],
+    "changed": []
+  },
+  "installed_fingerprints": {
+    "environment:PATH:Machine": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "service:DemoService": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "scope": "Selected registry trees, services and machine/user PATH. Files and all other system state are outside this version."
+}
